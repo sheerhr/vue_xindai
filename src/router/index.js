@@ -7,17 +7,52 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    name: 'Home',
-    component: Home
+    redirect: '/home'
   },
   {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  }
+    path: '/login',
+    name: 'login',
+    component: () => import('../views/login/index.vue')
+  },
+  {
+    path: '/home',
+    name: 'home',
+    redirect:'/index',
+    component: () => import('../layout/index'),
+    children:[
+      {
+        path: '/index',
+        name: 'index',
+        component: () => import('../views/Home.vue')
+      },
+      {
+        path: '/loan-input',
+        name: 'loan-input',
+        component: () => import('../views/loan-input/index')
+      },
+      // 贷款审批
+      {
+        path: '/loan-approve',
+        name: 'loan-approve',
+        component: () => import('../views/loan-approve/index.vue'),
+        children:[
+          // 初审
+          {
+            path: 'first',
+            name: 'first',
+            component: () => import('../views/loan-approve/first.vue'),
+          },
+          // 终审
+          {
+            path: 'end',
+            name: 'end',
+            component: () => import('../views/loan-approve/end.vue'),
+          }
+        ]
+      }
+    ]
+  },
+
 ]
 
 const router = new VueRouter({
